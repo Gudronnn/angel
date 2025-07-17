@@ -1,207 +1,176 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Перукарня Angel — Запис та Галерея</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Poppins&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Перукарня Angel — Запис та Галерея</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  * {
-    box-sizing: border-box;
-  }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(to right, #ffe6f0, #fff0f9);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    background: linear-gradient(135deg, #fff0f8, #ffe6f2);
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+    header {
+      background: linear-gradient(to right, #d58ab3, #f7a8c7);
+      color: white;
+      padding: 25px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Playfair Display', serif;
+      box-shadow: 0 4px 20px rgba(213, 138, 179, 0.4);
+    }
 
-  header {
-    background: #d58ab3;
-    color: white;
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: 'Playfair Display', serif;
-    box-shadow: 0 4px 8px rgba(213, 138, 179, 0.4);
-  }
+    header h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
 
-  header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    letter-spacing: 2px;
-  }
+    nav a {
+      color: white;
+      margin-left: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.2rem;
+      position: relative;
+      transition: 0.3s;
+    }
 
-  nav a {
-    color: white;
-    margin-left: 20px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    position: relative;
-    transition: color 0.3s;
-  }
+    nav a:hover::after, nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #fff;
+    }
 
-  nav a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background: #fff;
-    transition: width 0.3s;
-  }
+    main {
+      flex-grow: 1;
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 25px;
+      padding: 40px 50px;
+      box-shadow: 0 12px 35px rgba(213, 138, 179, 0.2);
+      animation: fadeIn 0.6s ease forwards;
+    }
 
-  nav a:hover, nav a.active {
-    color: #fbe7f0;
-  }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d58ab3;
+      font-size: 2.4rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
 
-  nav a:hover::after, nav a.active::after {
-    width: 100%;
-  }
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
 
-  main {
-    flex-grow: 1;
-    max-width: 720px;
-    margin: 40px auto;
-    background: white;
-    border-radius: 20px;
-    padding: 30px 40px;
-    box-shadow: 0 10px 30px rgba(213, 138, 179, 0.2);
-    animation: fadeIn 0.6s ease forwards;
-  }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+      color: #6e3a58;
+    }
 
-  h2 {
-    font-family: 'Playfair Display', serif;
-    color: #d58ab3;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center;
-  }
+    select, button {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 6px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 2px solid #d58ab3;
+      transition: 0.3s;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+    }
 
-  form {
-    max-width: 400px;
-    margin: 0 auto;
-  }
+    select:focus, button:focus {
+      outline: none;
+      border-color: #b05382;
+      box-shadow: 0 0 10px #b05382aa;
+    }
 
-  label {
-    display: block;
-    margin-top: 20px;
-    font-weight: 600;
-    color: #6e3a58;
-  }
+    button {
+      background: #d58ab3;
+      color: white;
+      margin-top: 30px;
+      font-weight: 700;
+      box-shadow: 0 5px 15px #d58ab3bb;
+    }
 
-  select, button {
-    width: 100%;
-    padding: 12px 15px;
-    margin-top: 6px;
-    font-size: 1rem;
-    border-radius: 12px;
-    border: 2px solid #d58ab3;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-  }
+    button:hover:not(:disabled) {
+      background: #b95384;
+      box-shadow: 0 7px 20px #b9538477;
+    }
 
-  select:focus, button:focus {
-    outline: none;
-    border-color: #b05382;
-    box-shadow: 0 0 8px #b05382aa;
-  }
+    button:disabled {
+      background: #f3cde0;
+      cursor: not-allowed;
+    }
 
-  select:disabled {
-    background: #f5e7ed;
-    cursor: not-allowed;
-  }
+    #message {
+      margin-top: 25px;
+      font-weight: 700;
+      text-align: center;
+      color: #4a854a;
+      font-size: 1.1rem;
+    }
 
-  button {
-    background: #d58ab3;
-    color: white;
-    border: none;
-    margin-top: 30px;
-    font-weight: 700;
-    box-shadow: 0 5px 15px #d58ab3bb;
-    transition: background-color 0.4s, box-shadow 0.4s;
-  }
+    .gallery-grid {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #777;
+      padding: 20px;
+    }
 
-  button:disabled {
-    background: #f3cde0;
-    cursor: default;
-    box-shadow: none;
-  }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.95rem;
+      color: #666;
+      border-top: 1px solid #eee;
+    }
 
-  button:hover:not(:disabled) {
-    background: #b95384;
-    box-shadow: 0 7px 20px #b9538477;
-  }
+    footer a {
+      color: #d58ab3;
+      font-weight: 700;
+      text-decoration: none;
+    }
 
-  #message {
-    margin-top: 25px;
-    font-weight: 700;
-    text-align: center;
-    color: #4a854a;
-    font-size: 1.1rem;
-  }
+    footer a:hover {
+      color: #b95384;
+    }
 
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-    gap: 20px;
-    padding-top: 10px;
-  }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(15px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
 
-  .gallery-grid img {
-    width: 100%;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(213, 138, 179, 0.3);
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .gallery-grid img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(213, 138, 179, 0.6);
-  }
-
-  footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.9rem;
-    color: #666;
-    border-top: 1px solid #eee;
-    margin-top: 40px;
-  }
-
-  footer a {
-    color: #d58ab3;
-    text-decoration: none;
-    font-weight: 700;
-    transition: color 0.3s;
-  }
-
-  footer a:hover {
-    color: #b95384;
-  }
-
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(15px);}
-    to {opacity: 1; transform: translateY(0);}
-  }
-
-  .page {
-    display: none;
-  }
-  .page.active {
-    display: block;
-  }
-</style>
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
@@ -214,9 +183,21 @@
 </header>
 
 <main>
+  <!-- Запис -->
   <section id="bookingPage" class="page active" aria-label="Форма запису на прийом">
     <h2>Запис на прийом</h2>
     <form id="bookingForm" novalidate>
+      <label for="serviceSelect">Оберіть послугу</label>
+      <select id="serviceSelect" required>
+        <option value="" disabled selected>Виберіть послугу</option>
+        <option value="Плетіння кіс">Плетіння кіс</option>
+        <option value="Чоловіча стрижка">Чоловіча стрижка</option>
+        <option value="Жіноча стрижка">Жіноча стрижка</option>
+        <option value="Дитяча стрижка">Дитяча стрижка</option>
+        <option value="Фарбування">Фарбування</option>
+        <option value="Укладка">Укладка</option>
+      </select>
+
       <label for="dateSelect">Оберіть дату</label>
       <select id="dateSelect" required>
         <option value="" disabled selected>Виберіть дату</option>
@@ -232,20 +213,17 @@
     <div id="message" role="alert" aria-live="polite"></div>
   </section>
 
-  <section id="galleryPage" class="page" aria-label="Галерея робіт перукарні Angel">
+  <!-- Галерея -->
+  <section id="galleryPage" class="page" aria-label="Галерея робіт">
     <h2>Галерея</h2>
-    <div class="gallery-grid" aria-live="polite">
-      <img src="images/IMG_0561.JPG" alt="Локони середньої довжини" />
-      <img src="images/IMG_0622.JPG" alt="Каре з об'ємом" />
-      <img src="images/IMG_0901.JPG" alt="Світле укладання з хвилями" />
-      <img src="images/IMG_0952.JPG" alt="Пряме світле волосся" />
-      <img src="images/IMG_1125.PNG" alt="Шоколадний колір з блиском" />
+    <div class="gallery-grid">
+      Роботи скоро будуть на сайті 💇‍♀️✨
     </div>
   </section>
 </main>
 
 <footer>
-  <p>Слідкуйте за нами в <a href="https://www.instagram.com/p/DKUfIcWMCGC/?igsh=YXpybnN6b2NndzZx" target="_blank" rel="noopener noreferrer">Instagram</a></p>
+  <p>Слідкуйте за нами в <a href="https://www.instagram.com/p/DKUfIcWMCGC/" target="_blank">Instagram</a></p>
 </footer>
 
 <script>
@@ -284,18 +262,12 @@
 
   const dateSelect = document.getElementById('dateSelect');
   const timeSelect = document.getElementById('timeSelect');
+  const serviceSelect = document.getElementById('serviceSelect');
   const bookBtn = document.getElementById('bookBtn');
   const message = document.getElementById('message');
-  const bookingForm = document.getElementById('bookingForm');
 
-  const busySlots = [
-    "2025-07-20 10:00",
-    "2025-07-20 12:00",
-    "2025-07-21 14:00",
-    "2025-08-05 11:00",
-  ];
-
-  const availableTimes = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+  const busySlots = ["2025-07-20 10:00", "2025-07-21 14:00"];
+  const availableTimes = ["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
 
   function populateDates() {
     const today = new Date();
@@ -309,7 +281,7 @@
 
       const option = document.createElement('option');
       option.value = dateStr;
-      option.textContent = date.toLocaleDateString('uk-UA', {weekday:'short', year:'numeric', month:'short', day:'numeric'});
+      option.textContent = date.toLocaleDateString('uk-UA', { weekday: 'short', day: 'numeric', month: 'short' });
       dateSelect.appendChild(option);
     }
   }
@@ -318,11 +290,11 @@
     timeSelect.innerHTML = '<option value="" disabled selected>Виберіть час</option>';
     let anyAvailable = false;
 
-    for(const time of availableTimes) {
+    for (const time of availableTimes) {
       const slot = `${selectedDate} ${time}`;
       const option = document.createElement('option');
       option.value = time;
-      if(busySlots.includes(slot)) {
+      if (busySlots.includes(slot)) {
         option.disabled = true;
         option.textContent = `${time} (зайнято)`;
       } else {
@@ -334,7 +306,7 @@
 
     timeSelect.disabled = !anyAvailable;
     bookBtn.disabled = true;
-    message.textContent = anyAvailable ? "" : "Вибрана дата повністю зайнята. Оберіть іншу дату.";
+    message.textContent = anyAvailable ? "" : "Ця дата повністю зайнята. Оберіть іншу.";
   }
 
   dateSelect.addEventListener('change', () => {
@@ -344,36 +316,38 @@
   });
 
   timeSelect.addEventListener('change', () => {
-    bookBtn.disabled = !(dateSelect.value && timeSelect.value);
+    bookBtn.disabled = !(dateSelect.value && timeSelect.value && serviceSelect.value);
   });
 
-  bookingForm.addEventListener('submit', (e) => {
+  serviceSelect.addEventListener('change', () => {
+    bookBtn.disabled = !(dateSelect.value && timeSelect.value && serviceSelect.value);
+  });
+
+  document.getElementById('bookingForm').addEventListener('submit', e => {
     e.preventDefault();
-    if(!dateSelect.value || !timeSelect.value) return;
 
-    const bookingDateText = dateSelect.options[dateSelect.selectedIndex].textContent;
-    const bookingTime = timeSelect.value;
-    const slot = `${dateSelect.value} ${bookingTime}`;
+    const service = serviceSelect.value;
+    const date = dateSelect.value;
+    const time = timeSelect.value;
 
-    if(busySlots.includes(slot)) {
+    const displayDate = dateSelect.options[dateSelect.selectedIndex].textContent;
+
+    const slot = `${date} ${time}`;
+    if (busySlots.includes(slot)) {
       message.style.color = 'red';
-      message.textContent = 'Цей час вже зайнятий. Оберіть інший.';
+      message.textContent = "Цей час вже зайнятий. Оберіть інший.";
       return;
     }
 
     busySlots.push(slot);
     message.style.color = 'green';
-    message.textContent = `Дякуємо! Ви записані на ${bookingDateText} о ${bookingTime}.`;
+    message.textContent = `Дякуємо! Ви записані на ${service} ${displayDate} о ${time}.`;
 
-    const email = 'stilist6199@gmail.com';
-    const subject = encodeURIComponent(`Запис на прийом — ${bookingDateText} о ${bookingTime}`);
-    const body = encodeURIComponent(
-      `Доброго дня!\n\nЯ хочу записатися на прийом до перукарні Angel.\nДата: ${bookingDateText}\nЧас: ${bookingTime}\n\nБудь ласка, підтвердіть мій запис.\n\nДякую!`
-    );
-
+    const email = "stilist6199@gmail.com";
+    const subject = encodeURIComponent(`Запис: ${service} — ${displayDate} о ${time}`);
+    const body = encodeURIComponent(`Доброго дня!\n\nЯ хочу записатися на послугу "${service}".\nДата: ${displayDate}\nЧас: ${time}\n\nБудь ласка, підтвердіть мій запис.\nДякую!`);
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
 
-    populateTimes(dateSelect.value);
     timeSelect.value = "";
     bookBtn.disabled = true;
   });

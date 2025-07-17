@@ -37,6 +37,8 @@
     text-decoration: none;
     transition: background 0.3s;
     cursor: pointer;
+    border: none;
+    font-size: 1.1rem;
   }
   .btn:hover {
     background: #c078a1;
@@ -84,36 +86,46 @@
   .modal {
     background: white;
     border-radius: 10px;
-    padding: 30px;
+    padding: 30px 40px 40px 40px;
     max-width: 400px;
     width: 90%;
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     text-align: left;
     position: relative;
+    font-size: 1rem;
   }
   .modal h3 {
     margin-top: 0;
     font-family: 'Playfair Display', serif;
     color: #d58ab3;
+    margin-bottom: 25px;
+    font-size: 2rem;
   }
   label {
     display: block;
     margin-top: 15px;
     font-weight: 600;
+    margin-bottom: 5px;
   }
   input[type="text"],
   input[type="email"],
   select {
     width: 100%;
-    padding: 8px 10px;
-    margin-top: 5px;
+    padding: 10px 12px;
     border-radius: 5px;
     border: 1px solid #ccc;
     box-sizing: border-box;
     font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  select:focus {
+    border-color: #d58ab3;
+    outline: none;
   }
   button.submit-btn {
-    margin-top: 25px;
+    margin-top: 30px;
     padding: 12px 25px;
     background: #d58ab3;
     color: white;
@@ -134,20 +146,30 @@
   .close-btn {
     background: transparent;
     border: none;
-    font-size: 1.3rem;
+    font-size: 1.8rem;
     position: absolute;
     right: 20px;
     top: 15px;
     cursor: pointer;
     color: #999;
+    font-weight: 700;
+    line-height: 1;
   }
   .close-btn:hover {
     color: #d58ab3;
   }
-
   /* Календар */
   select#selectedDate {
     margin-top: 10px;
+    font-size: 1rem;
+  }
+  a.social-link {
+    color: #d58ab3;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  a.social-link:hover {
+    text-decoration: underline;
   }
 </style>
 </head>
@@ -188,7 +210,10 @@
   <p>📍 м. Київ, вул. Краси 12</p>
   <p>📞 +380 99 123 45 67</p>
   <p>⏰ Пн–Сб: 10:00–20:00</p>
-  <p>📸 <a href="https://www.instagram.com/p/DKUfIcWMCGC/?igsh=YXpybnN6b2NndzZx" target="_blank" rel="noopener">Instagram</a> | <a href="#">Facebook</a></p>
+  <p>📸 
+    <a class="social-link" href="https://www.instagram.com/p/DKUfIcWMCGC/?igsh=YXpybnN6b2NndzZx" target="_blank" rel="noopener noreferrer">Instagram</a> | 
+    <a class="social-link" href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
+  </p>
 </section>
 
 <footer>
@@ -196,16 +221,16 @@
 </footer>
 
 <!-- Модальне вікно для запису -->
-<div class="modal-bg" id="modalBg" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
     <button class="close-btn" id="closeModalBtn" aria-label="Закрити">&times;</button>
     <h3 id="modalTitle">Запис на прийом</h3>
-    <form id="bookingForm">
+    <form id="bookingForm" novalidate>
       <label for="name">Ім'я</label>
-      <input type="text" id="name" name="name" required />
+      <input type="text" id="name" name="name" placeholder="Ваше ім'я" required autocomplete="name" />
 
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" required />
+      <input type="email" id="email" name="email" placeholder="example@mail.com" required autocomplete="email" />
 
       <label for="selectedDate">Виберіть дату</label>
       <select id="selectedDate" name="selectedDate" required>
@@ -217,8 +242,11 @@
   </div>
 </div>
 
+<!-- Підключення EmailJS SDK -->
 <script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
+
 <script>
+  // Ініціалізація EmailJS (твій Public Key)
   emailjs.init('v1NNFZ9KWe8j93x39');
 
   const openModalBtn = document.getElementById('openModalBtn');
@@ -228,6 +256,7 @@
   const submitBtn = document.getElementById('submitBtn');
   const selectedDate = document.getElementById('selectedDate');
 
+  // Зайняті дні — формат YYYY-MM-DD (треба оновлювати)
   const busyDates = [
     '2025-07-20',
     '2025-07-21',
@@ -235,28 +264,26 @@
     '2025-08-01',
   ];
 
+  // Відкриття модалки
   openModalBtn.addEventListener('click', () => {
     modalBg.classList.add('active');
-    modalBg.setAttribute('aria-hidden', 'false');
     populateDates();
+    validateForm();
   });
 
-  closeModalBtn.addEventListener('click', () => {
+  // Закриття модалки
+  closeModalBtn.addEventListener('click', closeModal);
+  modalBg.addEventListener('click', e => {
+    if (e.target === modalBg) closeModal();
+  });
+
+  function closeModal() {
     modalBg.classList.remove('active');
-    modalBg.setAttribute('aria-hidden', 'true');
     bookingForm.reset();
     submitBtn.disabled = true;
-  });
+  }
 
-  modalBg.addEventListener('click', e => {
-    if (e.target === modalBg) {
-      modalBg.classList.remove('active');
-      modalBg.setAttribute('aria-hidden', 'true');
-      bookingForm.reset();
-      submitBtn.disabled = true;
-    }
-  });
-
+  // Заповнення селекту датами (14 днів вперед)
   function populateDates() {
     selectedDate.innerHTML = '';
     const today = new Date();
@@ -266,58 +293,52 @@
       const yyyy = date.getFullYear();
       const mm = String(date.getMonth() + 1).padStart(2, '0');
       const dd = String(date.getDate()).padStart(2, '0');
-      const dateStr = `${yyyy}-${mm}-${dd}`;
-
+      const fullDate = `${yyyy}-${mm}-${dd}`;
+      const isBusy = busyDates.includes(fullDate);
       const option = document.createElement('option');
-      option.value = dateStr;
-      option.textContent = date.toLocaleDateString('uk-UA', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
-
-      if (busyDates.includes(dateStr)) {
-        option.disabled = true;
-        option.textContent += ' (зайнято)';
-      }
+      option.value = fullDate;
+      option.textContent = date.toLocaleDateString('uk-UA', { weekday: 'short', day: 'numeric', month: 'short' });
+      option.disabled = isBusy;
       selectedDate.appendChild(option);
     }
   }
 
-  bookingForm.addEventListener('input', () => {
-    submitBtn.disabled = !(bookingForm.checkValidity());
-  });
+  // Валідація форми (проста)
+  bookingForm.addEventListener('input', validateForm);
+  function validateForm() {
+    const isValid = bookingForm.checkValidity() && selectedDate.value && !selectedDate.options[selectedDate.selectedIndex].disabled;
+    submitBtn.disabled = !isValid;
+  }
 
-  bookingForm.addEventListener('submit', function(e) {
+  // Відправка форми через EmailJS
+  bookingForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    if (!bookingForm.checkValidity()) {
-      bookingForm.reportValidity();
-      return;
-    }
-
     submitBtn.disabled = true;
+    submitBtn.textContent = 'Відправляємо...';
 
     const templateParams = {
-      user_name: bookingForm.name.value,
-      user_email: bookingForm.email.value,
-      appointment_date: bookingForm.selectedDate.value,
+      from_name: bookingForm.name.value,
+      from_email: bookingForm.email.value,
+      date: bookingForm.selectedDate.value,
+      service_id: 'service_8h4az1u',
+      template_id: 'template_x6mpwnp',
+      user_id: 'v1NNFZ9KWe8j93x39'
     };
 
-    emailjs.send('service_8h4az1u', 'template_x6mpwnp', templateParams)
-      .then(() => {
-        alert('Дякуємо! Ваш запис успішно надіслано.');
-        bookingForm.reset();
-        modalBg.classList.remove('active');
-        modalBg.setAttribute('aria-hidden', 'true');
-      }, (error) => {
-        alert('Сталася помилка. Спробуйте пізніше.');
-        console.error('EmailJS error:', error);
-      })
-      .finally(() => {
-        submitBtn.disabled = false;
-      });
+    emailjs.send('service_8h4az1u', 'template_x6mpwnp', {
+      from_name: templateParams.from_name,
+      from_email: templateParams.from_email,
+      date: templateParams.date
+    }).then(() => {
+      alert('Дякуємо за запис! Ми з вами зв\'яжемося найближчим часом.');
+      closeModal();
+      submitBtn.textContent = 'Підтвердити запис';
+    }, (error) => {
+      alert('Сталася помилка при відправці. Спробуйте пізніше.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Підтвердити запис';
+      console.error('EmailJS error:', error);
+    });
   });
 </script>
 

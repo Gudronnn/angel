@@ -7,7 +7,6 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Poppins&display=swap');
 
-  /* Reset */
   * {
     box-sizing: border-box;
   }
@@ -37,7 +36,6 @@
     margin: 0;
     font-size: 2.5rem;
     letter-spacing: 2px;
-    cursor: default;
   }
 
   nav a {
@@ -87,8 +85,6 @@
     margin-bottom: 20px;
     text-align: center;
   }
-
-  /* --- Запис --- */
 
   form {
     max-width: 400px;
@@ -154,8 +150,6 @@
     font-size: 1.1rem;
   }
 
-  /* --- Галерея --- */
-
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
@@ -175,8 +169,6 @@
     transform: scale(1.05);
     box-shadow: 0 8px 25px rgba(213, 138, 179, 0.6);
   }
-
-  /* --- Instagram --- */
 
   footer {
     text-align: center;
@@ -198,13 +190,11 @@
     color: #b95384;
   }
 
-  /* --- Анімації --- */
   @keyframes fadeIn {
     from {opacity: 0; transform: translateY(15px);}
     to {opacity: 1; transform: translateY(0);}
   }
 
-  /* --- Сховані сторінки --- */
   .page {
     display: none;
   }
@@ -224,17 +214,16 @@
 </header>
 
 <main>
-  <!-- Сторінка запису -->
   <section id="bookingPage" class="page active" aria-label="Форма запису на прийом">
     <h2>Запис на прийом</h2>
     <form id="bookingForm" novalidate>
       <label for="dateSelect">Оберіть дату</label>
-      <select id="dateSelect" required aria-required="true" aria-describedby="dateHelp">
+      <select id="dateSelect" required>
         <option value="" disabled selected>Виберіть дату</option>
       </select>
 
       <label for="timeSelect">Оберіть час</label>
-      <select id="timeSelect" required aria-required="true" disabled>
+      <select id="timeSelect" required disabled>
         <option value="" disabled selected>Виберіть час</option>
       </select>
 
@@ -243,26 +232,23 @@
     <div id="message" role="alert" aria-live="polite"></div>
   </section>
 
-  <!-- Сторінка галереї -->
   <section id="galleryPage" class="page" aria-label="Галерея робіт перукарні Angel">
     <h2>Галерея</h2>
     <div class="gallery-grid" aria-live="polite">
-      <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80" alt="Стильна зачіска 1" />
-      <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80" alt="Стильна зачіска 2" />
-      <img src="https://images.unsplash.com/photo-1511455973614-1a7a1b9b73ee?auto=format&fit=crop&w=600&q=80" alt="Стильна зачіска 3" />
-      <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=600&q=80" alt="Стильна зачіска 4" />
-      <img src="https://images.unsplash.com/photo-1495804204444-7b422157f1a1?auto=format&fit=crop&w=600&q=80" alt="Стильна зачіска 5" />
-      <img src="https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b?auto=format&fit=crop&w=600&q=80" alt="Стильна зачіска 6" />
+      <img src="images/IMG_0561.JPG" alt="Локони середньої довжини" />
+      <img src="images/IMG_0622.JPG" alt="Каре з об'ємом" />
+      <img src="images/IMG_0901.JPG" alt="Світле укладання з хвилями" />
+      <img src="images/IMG_0952.JPG" alt="Пряме світле волосся" />
+      <img src="images/IMG_1125.PNG" alt="Шоколадний колір з блиском" />
     </div>
   </section>
 </main>
 
 <footer>
-  <p>Слідкуйте за нами в <a href="https://www.instagram.com/p/DKUfIcWMCGC/?igsh=YXpybnN6b2NndzZx" target="_blank" rel="noopener noreferrer" aria-label="Instagram Angel">Instagram</a></p>
+  <p>Слідкуйте за нами в <a href="https://www.instagram.com/p/DKUfIcWMCGC/?igsh=YXpybnN6b2NndzZx" target="_blank" rel="noopener noreferrer">Instagram</a></p>
 </footer>
 
 <script>
-  // Навігація між вкладками
   const navBooking = document.getElementById('navBooking');
   const navGallery = document.getElementById('navGallery');
   const bookingPage = document.getElementById('bookingPage');
@@ -296,14 +282,12 @@
     setActiveTab('gallery');
   });
 
-  // --- Логіка форми запису ---
   const dateSelect = document.getElementById('dateSelect');
   const timeSelect = document.getElementById('timeSelect');
   const bookBtn = document.getElementById('bookBtn');
   const message = document.getElementById('message');
   const bookingForm = document.getElementById('bookingForm');
 
-  // Зайняті слоти (формат YYYY-MM-DD HH:mm)
   const busySlots = [
     "2025-07-20 10:00",
     "2025-07-20 12:00",
@@ -311,11 +295,7 @@
     "2025-08-05 11:00",
   ];
 
-  // Доступні часи
-  const availableTimes = [
-    "10:00", "11:00", "12:00", "13:00",
-    "14:00", "15:00", "16:00", "17:00", "18:00"
-  ];
+  const availableTimes = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
 
   function populateDates() {
     const today = new Date();
@@ -382,32 +362,22 @@
     }
 
     busySlots.push(slot);
-
     message.style.color = 'green';
     message.textContent = `Дякуємо! Ви записані на ${bookingDateText} о ${bookingTime}.`;
 
-    // Відкриваємо поштовий клієнт із готовим листом
     const email = 'stilist6199@gmail.com';
     const subject = encodeURIComponent(`Запис на прийом — ${bookingDateText} о ${bookingTime}`);
     const body = encodeURIComponent(
-      `Доброго дня!\n\n` +
-      `Я хочу записатися на прийом до перукарні Angel.\n` +
-      `Дата: ${bookingDateText}\n` +
-      `Час: ${bookingTime}\n\n` +
-      `Будь ласка, підтвердіть мій запис.\n\n` +
-      `Дякую!`
+      `Доброго дня!\n\nЯ хочу записатися на прийом до перукарні Angel.\nДата: ${bookingDateText}\nЧас: ${bookingTime}\n\nБудь ласка, підтвердіть мій запис.\n\nДякую!`
     );
 
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
 
-    // Оновлюємо список часу для обраної дати (заблокований слот)
     populateTimes(dateSelect.value);
-
     timeSelect.value = "";
     bookBtn.disabled = true;
   });
 
-  // Ініціалізація
   populateDates();
 </script>
 

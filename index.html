@@ -82,14 +82,18 @@
 
 <section>
   <h2>Запис на прийом</h2>
-  <form id="bookingForm" onsubmit="return false;">
+  <form id="bookingForm" novalidate>
     <label for="dateSelect">Виберіть дату:</label>
-    <select id="dateSelect" required></select>
+    <select id="dateSelect" required>
+      <option value="" disabled selected>Оберіть дату</option>
+    </select>
 
     <label for="timeSelect">Виберіть час:</label>
-    <select id="timeSelect" required disabled></select>
+    <select id="timeSelect" required disabled>
+      <option value="" disabled selected>Оберіть час</option>
+    </select>
 
-    <button id="bookBtn" disabled>Записатись</button>
+    <button type="submit" id="bookBtn" disabled>Записатись</button>
   </form>
   <div id="message" role="alert" aria-live="polite"></div>
 </section>
@@ -99,6 +103,7 @@
   const timeSelect = document.getElementById('timeSelect');
   const bookBtn = document.getElementById('bookBtn');
   const message = document.getElementById('message');
+  const bookingForm = document.getElementById('bookingForm');
 
   // Масив зайнятих слотів формату "YYYY-MM-DD HH:mm"
   const busySlots = [
@@ -108,41 +113,38 @@
     "2025-08-05 11:00",
   ];
 
-  // Масив можливих часів (кожна година з 10:00 до 18:00)
+  // Можливі часи для запису (10:00 - 18:00)
   const availableTimes = [
     "10:00", "11:00", "12:00", "13:00",
     "14:00", "15:00", "16:00", "17:00", "18:00"
   ];
 
-  // Заповнюємо дати на 60 днів вперед
   function populateDates() {
     const today = new Date();
-    for (let i = 0; i < 60; i++) {
-      const date = new Date();
+    for(let i = 0; i < 60; i++) {
+      const date = new Date(today);
       date.setDate(today.getDate() + i);
       const yyyy = date.getFullYear();
-      const mm = String(date.getMonth() + 1).padStart(2, '0');
-      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2,'0');
+      const dd = String(date.getDate()).padStart(2,'0');
       const dateStr = `${yyyy}-${mm}-${dd}`;
 
       const option = document.createElement('option');
       option.value = dateStr;
-      option.textContent = date.toLocaleDateString('uk-UA', {weekday: 'short', year:'numeric', month:'short', day:'numeric'});
+      option.textContent = date.toLocaleDateString('uk-UA', {weekday:'short', year:'numeric', month:'short', day:'numeric'});
       dateSelect.appendChild(option);
     }
   }
 
-  // Заповнюємо часи для вибраної дати, блокуємо зайняті
   function populateTimes(selectedDate) {
-    timeSelect.innerHTML = '';
+    timeSelect.innerHTML = '<option value="" disabled selected>Оберіть час</option>';
     let anyAvailable = false;
 
-    for (const time of availableTimes) {
+    for(const time of availableTimes) {
       const slot = `${selectedDate} ${time}`;
       const option = document.createElement('option');
       option.value = time;
-
-      if (busySlots.includes(slot)) {
+      if(busySlots.includes(slot)) {
         option.disabled = true;
         option.textContent = `${time} (зайнято)`;
       } else {
@@ -153,51 +155,52 @@
     }
 
     timeSelect.disabled = !anyAvailable;
-    bookBtn.disabled = !anyAvailable;
-    if (!anyAvailable) {
-      message.textContent = "Вибрана дата повністю зайнята. Будь ласка, оберіть іншу дату.";
-    } else {
-      message.textContent = "";
-    }
+    bookBtn.disabled = true;
+    message.textContent = anyAvailable ? "" : "Вибрана дата повністю зайнята. Оберіть іншу дату.";
   }
 
-  // Слухаємо зміну дати
   dateSelect.addEventListener('change', () => {
     populateTimes(dateSelect.value);
+    bookBtn.disabled = true;
+    message.textContent = "";
   });
 
-  // Слухаємо зміну часу — активуємо кнопку, якщо обрано дату і час
   timeSelect.addEventListener('change', () => {
     bookBtn.disabled = !(dateSelect.value && timeSelect.value);
   });
 
-  // Обробка натискання кнопки запису
-  bookBtn.addEventListener('click', () => {
-    if (!dateSelect.value || !timeSelect.value) return;
+  bookingForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(!dateSelect.value || !timeSelect.value) return;
 
-    const bookingDate = dateSelect.options[dateSelect.selectedIndex].textContent;
+    const bookingDateText = dateSelect.options[dateSelect.selectedIndex].textContent;
     const bookingTime = timeSelect.value;
+    const slot = `${dateSelect.value} ${bookingTime}`;
+
+    // Перевірка на зайнятість (на всяк випадок)
+    if(busySlots.includes(slot)) {
+      message.style.color = 'red';
+      message.textContent = 'Цей час вже зайнятий. Оберіть інший.';
+      return;
+    }
+
+    busySlots.push(slot);
 
     message.style.color = 'green';
-    message.textContent = `Дякуємо! Ви записані на ${bookingDate} о ${bookingTime}.`;
+    message.textContent = `Дякуємо! Ви записані на ${bookingDateText} о ${bookingTime}.`;
 
-    // Тут можна додати збереження в localStorage чи відправку на сервер
-
-    // Заносимо цей слот у зайняті, щоб заблокувати його (тільки на час сесії)
-    busySlots.push(`${dateSelect.value} ${timeSelect.value}`);
-
-    // Оновлюємо список часу щоб заблокувати цей слот
+    // Оновлюємо часи, щоб заблокувати щойно зайнятий слот
     populateTimes(dateSelect.value);
 
-    // Вимикаємо кнопку поки не виберуть новий час
-    bookBtn.disabled = true;
+    // Скидаємо вибір часу і кнопку
     timeSelect.value = "";
+    bookBtn.disabled = true;
   });
 
-  // Початкове заповнення дат і часу
+  // Ініціалізація
   populateDates();
-  populateTimes(dateSelect.value);
 </script>
 
 </body>
 </html>
+

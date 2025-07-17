@@ -344,3 +344,88 @@
 
 </body>
 </html>
+<script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
+<script>
+  // Ініціалізуємо emailjs ПЕРЕД використанням
+  emailjs.init('v1NNFZ9KWe8j93x39');
+
+  const openModalBtn = document.getElementById('openModalBtn');
+  const modalBg = document.getElementById('modalBg');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const bookingForm = document.getElementById('bookingForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const selectedDate = document.getElementById('selectedDate');
+
+  // Зайняті дати (онови їх у форматі YYYY-MM-DD)
+  const busyDates = [
+    '2025-07-20',
+    '2025-07-21',
+    '2025-07-25',
+    '2025-08-01',
+  ];
+
+  openModalBtn.addEventListener('click', () => {
+    modalBg.classList.add('active');
+    populateDates();
+    validateForm();
+  });
+
+  closeModalBtn.addEventListener('click', closeModal);
+  modalBg.addEventListener('click', e => {
+    if (e.target === modalBg) closeModal();
+  });
+
+  function closeModal() {
+    modalBg.classList.remove('active');
+    bookingForm.reset();
+    submitBtn.disabled = true;
+  }
+
+  function populateDates() {
+    selectedDate.innerHTML = '';
+    const today = new Date();
+    for (let i = 0; i < 14; i++) {
+      const date = new Date();
+      date.setDate(today.getDate() + i);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      const fullDate = `${yyyy}-${mm}-${dd}`;
+
+      const option = document.createElement('option');
+      option.value = fullDate;
+      option.textContent = date.toLocaleDateString('uk-UA', { weekday: 'short', day: 'numeric', month: 'short' });
+      option.disabled = busyDates.includes(fullDate);
+
+      selectedDate.appendChild(option);
+    }
+  }
+
+  bookingForm.addEventListener('input', validateForm);
+
+  function validateForm() {
+    const isValid = bookingForm.checkValidity() && selectedDate.value && !selectedDate.options[selectedDate.selectedIndex].disabled;
+    submitBtn.disabled = !isValid;
+  }
+
+  bookingForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Відправляємо...';
+
+    emailjs.send('service_8h4az1u', 'template_x6mpwnp', {
+      from_name: bookingForm.name.value,
+      from_email: bookingForm.email.value,
+      date: bookingForm.selectedDate.value
+    }).then(() => {
+      alert('Дякуємо за запис! Ми з вами зв\'яжемося найближчим часом.');
+      closeModal();
+      submitBtn.textContent = 'Підтвердити запис';
+    }, (error) => {
+      alert('Сталася помилка при відправці. Спробуйте пізніше.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Підтвердити запис';
+      console.error('EmailJS error:', error);
+    });
+  });
+</script>
